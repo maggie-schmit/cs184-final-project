@@ -8,14 +8,26 @@ aws.config.update({region: 'us-west-2'});
 const s3 = new aws.S3();
 const rekognition = new aws.Rekognition();
 const S3_BUCKET_NAME = 'cs184-faces-2';
+const MEMBER_COLLECTION_ID = 'cs184-members';
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
+router.post('/createCollection', async function (req, res, next) {
+    rekognition.createCollection({CollectionId: MEMBER_COLLECTION_ID}, function (err,data) {
+      if (err) {
+        console.log(err);
+        res.sendStatus(500);
+      } else {
+        console.log(data);
+        res.sendStatus(200);
+      }
+    })
+})
+
 router.post('/checkFace', async function (req, res, next) {
-  console.log("1");
   // Check input
   if (!req.files.face || !req.files.face.data) {
     res.sendStatus(400);
@@ -23,7 +35,6 @@ router.post('/checkFace', async function (req, res, next) {
   }
 
   // Add the image to S3
-  console.log("2");
   const key = uuid();  // generate a unique key for this image
   const uploadParams = {
     Bucket: S3_BUCKET_NAME,
@@ -39,9 +50,8 @@ router.post('/checkFace', async function (req, res, next) {
   }
 
   // Check if it is in our collection
-  console.log("3");
   const params = {
-    CollectionId: "members",
+    CollectionId: MEMBER_COLLECTION_ID,
     FaceMatchThreshold: 90,
     Image: {
       S3Object: {
@@ -52,7 +62,6 @@ router.post('/checkFace', async function (req, res, next) {
     MaxFaces: 10
   };
   rekognition.searchFacesByImage(params, function (err, data) {
-    console.log("4");
     if (err) {
       res.sendStatus(500);
       console.log(err);
