@@ -25,6 +25,50 @@ router.post('/createCollection', async function (req, res, next) {
         res.sendStatus(200);
       }
     })
+});
+
+router.post('/addMember', async function (req, res, next) {
+  // Check input
+  if (!req.files || !req.files.face || !req.files.face.data || !req.body.memberId) {
+    res.sendStatus(400);
+    return;
+  }
+
+  // Add image to S3
+  const uploadParams = {
+    Bucket: S3_BUCKET_NAME,
+    Key: req.body.memberId,
+    Body: req.files.face.data
+  }
+  try {
+    const s3Response = await s3.putObject(uploadParams).promise();
+  } catch (err) {
+    res.sendStatus(500);
+    console.log(err);
+    return;
+  }
+
+  // Upload to Rekognition
+  const params = {
+    CollectionId: MEMBER_COLLECTION_ID,
+    DetectionAttributes: [],
+    ExternalImageId: req.body.memberId,
+    Image: {
+      S3Object: {
+        Bucket: S3_BUCKET_NAME,
+        Name: req.body.memberId
+      }
+    }
+  };
+  rekognition.indexFaces(params, function (err, data) {
+    if (err) {
+      res.sendStatus(500);
+      console.log(err);
+    } else {
+      console.log(data);
+      res.send(data);
+    }
+  })
 })
 
 router.post('/checkFace', async function (req, res, next) {
@@ -70,6 +114,8 @@ router.post('/checkFace', async function (req, res, next) {
       res.send(data);
     }
   })
+
+  // TODO: delete image from S3
 });
 
 module.exports = router;
