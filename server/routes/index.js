@@ -12,8 +12,12 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/checkFace', async function (req, res, next) {
+  // Check input
+  if (!req.files.face) {
+    res.sendStatus(400);
+    return;
+  }
   // Add the image to S3
-  console.log(req.body)
   console.log(req.files)
   // Check if it is in our collection
   // const params = {
