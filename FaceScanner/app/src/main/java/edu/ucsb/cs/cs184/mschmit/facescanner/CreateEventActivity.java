@@ -1,4 +1,4 @@
-package cs184.cs.ucsb.edu.hello;
+package edu.ucsb.cs.cs184.mschmit.facescanner;
 
 import android.content.Context;
 import android.content.Intent;
@@ -26,11 +26,13 @@ public class CreateEventActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // first does api call adding an event
-//                Intent intent;
-//                intent = new Intent(context, EventHomepage.class);
-//                startActivity(intent);
-                Toast.makeText(context,"You pressed the create event button, it's supposed to create an event and staart a new EventHomepage activity but instead is commented out.",
-                        Toast.LENGTH_SHORT).show();
+                // TODO: add event to the API
+
+                Intent intent;
+                intent = new Intent(context, EventHomePage.class);
+                intent.putExtra("key", 0);
+                intent.putExtra("event_name", name.getText().toString());
+                startActivity(intent);
             }
         });
     }

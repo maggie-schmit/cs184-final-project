@@ -40,17 +40,23 @@ import android.util.Log;
 
 import java.util.Map;
 import java.util.HashMap;
-// import org.apache.commons.codec.binary.Base64;
+import android.support.design.widget.FloatingActionButton;
 
 
 public class EventHomePage extends AppCompatActivity {
 
     // TODO: edit how the text looks in each activity
 
+    // TODO: ensure that each activity knows which event they are dealing with
+
     TextView mTitle;
     Button mCameraButton;
     Button mMetricsButton;
     Button mCloseButton;
+
+    FloatingActionButton mBackButton;
+
+    String mEventName = "";
 
 
     @Override
@@ -59,6 +65,8 @@ public class EventHomePage extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_home_page);
+        // make title
+        mTitle = (TextView) findViewById(R.id.welcome_text);
 
         Intent intent = getIntent();
         if(intent.getExtras() != null){
@@ -68,6 +76,12 @@ public class EventHomePage extends AppCompatActivity {
 
 
             switch(code){
+                case 0:
+                    String event_name = intent.getStringExtra("event_name");
+                    String title = "Welcome to " + event_name+ " home page";
+                    mEventName = event_name;
+                    mTitle.setText(title);
+                    break;
                 case 1:
                     // person already existed and was added to the event
                     // get person name
@@ -115,14 +129,14 @@ public class EventHomePage extends AppCompatActivity {
 
         }
 
-        // make title
-        mTitle = (TextView) findViewById(R.id.welcome_text);
+
 
         // make buttons
         mCameraButton = (Button) findViewById(R.id.camera_button);
         mMetricsButton = (Button) findViewById(R.id.metrics_button);
         mCloseButton = (Button) findViewById(R.id.close_button);
 
+        mBackButton = (FloatingActionButton) findViewById(R.id.fab_sign_out);
 
         // set up button activities
 
@@ -188,7 +202,40 @@ public class EventHomePage extends AppCompatActivity {
         });
 
 
-        // TODO: add functionality to the "go back" button
+        mBackButton.setOnClickListener(new FloatingActionButton.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+
+                // ask are you sure
+
+                // go back to select event activity
+                // go back to the home page
+                final AlertDialog alertDialog = new AlertDialog.Builder(EventHomePage.this).create();
+                alertDialog.setTitle("Alert Dialog");
+                alertDialog.setMessage("Sign out of event?");
+                alertDialog.setIcon(R.drawable.ic_subdirectory_arrow_left_black_24dp);
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // save changes to interface
+                        // return to EventHomePage
+                        Intent myIntent = new Intent(EventHomePage.this, EventActivity.class);
+                        EventHomePage.this.startActivity(myIntent);
+                    }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // do not save changes to interface
+
+                        alertDialog.cancel();
+                    }
+                });
+
+                alertDialog.show();
+
+            }
+        });
 
     }
 

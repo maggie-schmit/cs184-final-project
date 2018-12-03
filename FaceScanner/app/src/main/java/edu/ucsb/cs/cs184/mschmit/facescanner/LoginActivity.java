@@ -1,4 +1,4 @@
-package cs184.cs.ucsb.edu.hello;
+package edu.ucsb.cs.cs184.mschmit.facescanner;
 
 import android.content.Context;
 import android.content.Intent;

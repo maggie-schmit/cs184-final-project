@@ -1,4 +1,4 @@
-package cs184.cs.ucsb.edu.hello;
+package edu.ucsb.cs.cs184.mschmit.facescanner;
 
 import android.content.Context;
 import android.content.Intent;
@@ -89,6 +89,7 @@ public class EventActivity extends AppCompatActivity {
                 LinearLayout ll=new LinearLayout(context);
                 ll.setId(View.generateViewId());
                 TextView name=new TextView(context);
+                // event name
                 name.setText(obj.getString("name"));
                 name.setId(View.generateViewId());
                 name.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -107,12 +108,19 @@ public class EventActivity extends AppCompatActivity {
                 viewEvent.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        //Intent intent;
-                        //intent = new Intent(user.getContext(), EventHomepage.class);
-                        //put information for extras here
-                        //startActivity(intent);
-                        Toast.makeText(context,"This is intended to start EventHomepage activity. This does nothing until you uncomment the 4 lines above where this is in code.",
-                                Toast.LENGTH_SHORT).show();
+                        Intent intent;
+                        intent = new Intent(EventActivity.this, EventHomePage.class);
+                        // put event info here
+                        // event name
+                        try {
+                            intent.putExtra("key", 0);
+                            intent.putExtra("event_name", obj.getString("name"));
+                            startActivity(intent);
+//                            Toast.makeText(context, "This is intended to start EventHomepage activity. This does nothing until you uncomment the 4 lines above where this is in code.",
+//                                    Toast.LENGTH_SHORT).show();
+                        }catch(JSONException e){
+                            e.printStackTrace();
+                        }
                     }
                 });
                 float buttonWidth=TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120, getResources().getDisplayMetrics());
