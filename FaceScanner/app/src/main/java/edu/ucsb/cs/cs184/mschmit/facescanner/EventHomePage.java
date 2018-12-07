@@ -97,6 +97,8 @@ public class EventHomePage extends AppCompatActivity {
             // get confirmation code
             int code = intent.getIntExtra("key", 0);
 
+            mEventName = intent.getStringExtra("event_name");
+
 
             switch(code){
                 case 0:

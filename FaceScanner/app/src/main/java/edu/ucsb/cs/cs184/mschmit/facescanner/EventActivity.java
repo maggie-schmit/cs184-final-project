@@ -2,6 +2,7 @@ package edu.ucsb.cs.cs184.mschmit.facescanner;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,7 +23,10 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.widget.RelativeLayout;
+import android.view.ViewGroup;
 
+import android.support.v4.content.ContextCompat;
 import java.util.Iterator;
 
 public class EventActivity extends AppCompatActivity {
@@ -102,6 +106,14 @@ public class EventActivity extends AppCompatActivity {
                 float mcWidth=TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 80, getResources().getDisplayMetrics());
                 memberCount.setWidth((int)mcWidth);
                 Button viewEvent=new Button(context);
+                viewEvent.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+                viewEvent.setTextColor(ContextCompat.getColor(context, R.color.colorWhite));
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+// add rule
+                // params.addRule(RelativeLayout.ALIGN_BOTTOM,R.id.ll_status);
+
+
+
                 viewEvent.setId(View.generateViewId());
                 viewEvent.setText("View Event");
                 viewEvent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -127,6 +139,8 @@ public class EventActivity extends AppCompatActivity {
                 viewEvent.setWidth((int)buttonWidth);
 
                 ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+                params.setMargins(0, 0, 0, 25);
+                viewEvent.setLayoutParams(params);
                 ll.setOrientation(LinearLayout.HORIZONTAL);
                 ll.addView(name);
                 ll.addView(memberCount);

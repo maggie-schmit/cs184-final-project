@@ -39,7 +39,10 @@
         android:text="Create Event!"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/create_event_member_count"/>
+        app:layout_constraintTop_toBottomOf="@+id/create_event_member_count"
+
+        android:background="@drawable/oval_shape"
+        android:textColor="@android:color/white"/>
     <TextView
         android:id="@+id/create_event_sidenote"
         android:layout_width="wrap_content"

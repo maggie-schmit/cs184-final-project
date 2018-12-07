@@ -23,7 +23,11 @@
         android:text="Create Event"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_title"/>
+        app:layout_constraintTop_toBottomOf="@+id/event_title"
+        android:background="@drawable/oval_shape"
+        android:textColor="@android:color/white"
+
+        />
     <!--<Button-->
         <!--android:id="@+id/event_view_button"-->
         <!--android:layout_width="wrap_content"-->
@@ -40,6 +44,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/event_create_button">
+        app:layout_constraintTop_toBottomOf="@+id/event_create_button"
+        >
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>
