@@ -36,10 +36,11 @@ public class MakeNewActivity extends AppCompatActivity {
     EditText mFirstNameText;
     EditText mLastNameText;
     EditText mEmailText;
-    EditText mIdText;
     Button mSaveButton;
 
     File mImageFile;
+
+    String mOrgID = "";
 
     /*
      * addMember should take the following data:
@@ -71,6 +72,8 @@ public class MakeNewActivity extends AppCompatActivity {
             // get image from file
             image_file = new File(file_name);
             mImageFile = new File(file_name);
+
+            mOrgID = intent.getStringExtra("orgID");
 
         }
 
@@ -229,10 +232,7 @@ public class MakeNewActivity extends AppCompatActivity {
                     builder.append(line);
 
                 }
-//                InputStream inputStream = connection.getInputStream(); //Read from a file, or a HttpRequest, or whatever.
-//                JSONParser jsonParser = new JSONParser();
-//                JSONObject jsonObject = (JSONObject)jsonParser.parse(
-//                        new InputStreamReader(inputStream, "UTF-8"));
+
                 JSONObject jsonObject = new JSONObject(builder.toString());
                 return jsonObject;
 
@@ -256,5 +256,3 @@ public class MakeNewActivity extends AppCompatActivity {
 
 
 }
-
-

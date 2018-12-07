@@ -66,12 +66,7 @@ public class MemberLookupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                // check if mSearchBar is empty
 
-                // if not empty, look up the name in the database and populate the ListView with the names
-
-                // add to person_list
-                // mArrayAdapter.notifyDataSetChanged();
             }
         });
 
@@ -95,46 +90,6 @@ public class MemberLookupActivity extends AppCompatActivity {
                         // close event
 
                         // TODO: add person to event
-                        //
-                        JSONObject json = new JSONObject();
-                        try {
-                            json.put("user","hello");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
-                        String url = "http://csquids-cs184-final-project.herokuapp.com/api/v1/checkFace";
-                        JsonObjectRequest postRequest = new JsonObjectRequest(url, json,
-                                new Response.Listener<JSONObject>()
-                                {
-                                    @Override
-                                    public void onResponse(JSONObject response) {
-                                        // response
-                                        Log.wtf("Respdafsonse", response.toString());
-                                        try {
-                                            if (response.getBoolean("logged_in")) {
-            //                                    String token=response.getString("token");
-            //                                    Intent intent;
-            //                                    intent = new Intent(user.getContext(), CreateEventActivity.class);
-            //                                    intent.putExtra("token", token);
-            //                                    startActivity(intent);
-                                            }
-                                        }catch(JSONException e){
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                },
-                                new Response.ErrorListener()
-                                {
-                                    @Override
-                                    public void onErrorResponse(VolleyError error) {
-                                        // error
-                                        error.printStackTrace();
-                                    }
-                                }
-            );
-
-            queue.add(postRequest);
 
 
                         // go to eventhomepage

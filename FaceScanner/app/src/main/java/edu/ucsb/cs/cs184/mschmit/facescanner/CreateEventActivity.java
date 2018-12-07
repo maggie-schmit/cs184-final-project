@@ -25,7 +25,6 @@ public class CreateEventActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // first does api call adding an event
                 // TODO: add event to the API
 
                 Intent intent;

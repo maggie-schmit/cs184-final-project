@@ -80,6 +80,7 @@ public class EventHomePage extends AppCompatActivity {
     FloatingActionButton mBackButton;
 
     String mEventName = "";
+    String mOrgID = "";
 
     private String mCurrPath = "";
 
@@ -92,10 +93,6 @@ public class EventHomePage extends AppCompatActivity {
         setContentView(R.layout.activity_event_home_page);
         // make title
         mTitle = (TextView) findViewById(R.id.welcome_text);
-
-
-
-
 
         Intent intent = getIntent();
         if(intent.getExtras() != null){
@@ -159,6 +156,14 @@ public class EventHomePage extends AppCompatActivity {
 
                     toast5.show();
                     break;
+                case 6:
+                    toast_string = "Cannot add to event; try again";
+                    Toast toast6 = Toast.makeText(getApplicationContext(),
+                            toast_string,
+                            Toast.LENGTH_SHORT);
+
+                    toast6.show();
+                    break;
                 default:
                     // do nothing
                     break;
@@ -190,36 +195,6 @@ public class EventHomePage extends AppCompatActivity {
                     startActivityForResult(takePictureIntent, 1);
                 }
 
-//                Long tsLong = System.currentTimeMillis() / 1000;
-//                String ts = tsLong.toString();
-//
-//                String imageFileName = "IMG_" + ts + "_";
-//                File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-//                if (storageDir == null) {
-//                    storageDir.mkdir();
-//                }
-//                File image;
-//                try {
-//                    image = File.createTempFile(
-//                            imageFileName,  /* prefix */
-//                            ".jpg",         /* suffix */
-//                            storageDir      /* directory */);
-//
-//                    Uri photoUri = FileProvider.getUriForFile(getApplicationContext(), "edu.ucsb.cs.cs184.mschmit.facescanner.provider", image);
-//
-//                    // mCurrPhoto = image.getAbsolutePath();
-//
-//                    Intent imageIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-//                    imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
-//                    imageIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-//                    // mStartDialog = true;
-//                    startActivityForResult(imageIntent, 1);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-
-
-
             }
         });
 
@@ -231,6 +206,7 @@ public class EventHomePage extends AppCompatActivity {
             Intent myIntent = new Intent(EventHomePage.this, MetricsActivity.class);
             // myIntent.putExtra("key", value); //Optional parameters
             EventHomePage.this.startActivity(myIntent);
+
 
             }
         });
@@ -356,9 +332,15 @@ public class EventHomePage extends AppCompatActivity {
             if(!notInDatabase){
                 // go to confirmation activity
 
+                String memberID = infoFromDatabase.getString("member_id");
+                String eventID = infoFromDatabase.getString("event_id");
                 Intent intent;
                 intent = new Intent(EventHomePage.this, ConfirmationActivity.class);
                 intent.putExtra("image_path", mCurrPath);
+                intent.putExtra("memberID", memberID);
+                intent.putExtra("eventID", mEventName);
+                intent.putExtra("orgID", mOrgID);
+                // intent.putExtra("orgId", );
                 startActivity(intent);
             }else{
                 // go to make new user activity
@@ -419,11 +401,6 @@ public class EventHomePage extends AppCompatActivity {
                 e.printStackTrace();
                 return null;
             }
-//            try {
-//                FileOutputStream fOut = new FileOutputStream(file);
-//            }catch(FileNotFoundException e){
-//                e.printStackTrace();;
-//            }
 
             try {
                 FileOutputStream fOut = new FileOutputStream(file);
@@ -465,11 +442,6 @@ public class EventHomePage extends AppCompatActivity {
                 writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
                 writer.append(CRLF).append(param).append(CRLF).flush();
 
-                // writer.append("--" + boundary).append(CRLF);
-                // writer.append("Content-Disposition: form-data; name=\"eventId\"").append(CRLF);
-                // writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
-                // writer.append(CRLF).append("2").append(CRLF).flush();
-
                 // Send text file.
                 writer.append("--" + boundary).append(CRLF);
                 writer.append("Content-Disposition: form-data; name=\"face\"; filename=\"" + file.getName() + "\"").append(CRLF);
@@ -479,13 +451,6 @@ public class EventHomePage extends AppCompatActivity {
                 output.flush(); // Important before continuing with writer!
                 writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
 
-                // Send binary file.
-                // writer.append("--" + boundary).append(CRLF);
-                // writer.append("Content-Disposition: form-data; name=\"binaryFile\"; filename=\"" + binaryFile.getName() + "\"").append(CRLF);
-                // writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(binaryFile.getName())).append(CRLF);
-                // writer.append("Content-Transfer-Encoding: binary").append(CRLF);
-                // writer.append(CRLF).flush();
-                // Files.copy(binaryFile.toPath(), output);
 
                 output.flush(); // Important before continuing with writer!
                 writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
@@ -516,10 +481,7 @@ public class EventHomePage extends AppCompatActivity {
                     builder.append(line);
 
                 }
-//                InputStream inputStream = connection.getInputStream(); //Read from a file, or a HttpRequest, or whatever.
-//                JSONParser jsonParser = new JSONParser();
-//                JSONObject jsonObject = (JSONObject)jsonParser.parse(
-//                        new InputStreamReader(inputStream, "UTF-8"));
+
                 JSONObject jsonObject = new JSONObject(builder.toString());
                 return jsonObject;
             }catch(Exception e){
@@ -531,8 +493,6 @@ public class EventHomePage extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(JSONObject d) {
-            // super.onPostExecute(d);
-            //Toast.makeText(getApplicationContext(), R.string.stoppedRecording, Toast.LENGTH_LONG).show();
             mLoadingDialog.hide();
             mLoadingDialog.dismiss();
             // change the viewer
