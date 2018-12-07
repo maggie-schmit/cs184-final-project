@@ -45,7 +45,8 @@ public class RegisterActivity extends AppCompatActivity {
         button=findViewById(R.id.register_button);
         context=this;
         Intent intent = getIntent();
-        email.setText(intent.getStringExtra("email"));
+        if(intent.hasExtra("email"))
+            email.setText(intent.getStringExtra("email"));
 
         button.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -66,7 +67,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     JSONObject jsonObj=new JSONObject(response);
                                     Intent intent;
                                     intent = new Intent(context, EventActivity.class);
-                                    intent.putExtra("id", jsonObj.getInt("id"));
+                                    intent.putExtra("id", String.valueOf(jsonObj.getInt("id")));
                                     startActivity(intent);
                                 } catch (JSONException e) {
                                     e.printStackTrace();

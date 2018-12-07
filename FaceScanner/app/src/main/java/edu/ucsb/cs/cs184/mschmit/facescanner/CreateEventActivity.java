@@ -41,7 +41,7 @@ public class CreateEventActivity extends AppCompatActivity {
         button=findViewById(R.id.create_event_button);
         context=this;
         Intent intent=getIntent();
-        Log.wtf("sdjijere",intent.getExtras().toString());
+//        Log.wtf("sdjijere",intent.getExtras().toString());
         id=intent.getIntExtra("id",-1);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
