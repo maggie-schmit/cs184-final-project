@@ -25,8 +25,10 @@
     <string name="preexisting_button_text">Sign in existing member</string>
     <string name="make_new_member_text">Create new member profile</string>
 
-    <string name="name_string">Name:</string>
-    <string name="name_edit_hint">Enter Name Here</string>
+    <string name="first_name_string">First Name:</string>
+    <string name="first_name_edit_hint">Enter First Name Here</string>
+    <string name="last_name_string">Last Name:</string>
+    <string name="last_name_edit_hint">Enter Last Name Here</string>
     <string name="email_string">Email:</string>
     <string name="email_edit_hint">Enter Email Here</string>
     <string name="unique_id_string">Choose a Unique Username:</string>
@@ -35,4 +37,7 @@
 
     <string name="lookup_bar_hint">Enter member name...</string>
     <string name="search_button_text">Search</string>
+
+    <string name="loading_text">Checking our database...</string>
+    <string name="make_new_title">MEMBER NOT FOUND; PLEASE MAKE NEW CLUB MEMBER</string>
 </resources>

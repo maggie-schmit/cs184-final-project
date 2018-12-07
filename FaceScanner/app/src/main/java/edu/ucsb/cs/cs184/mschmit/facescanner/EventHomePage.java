@@ -1,7 +1,10 @@
 package edu.ucsb.cs.cs184.mschmit.facescanner;
 
+import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,16 +21,24 @@ import android.util.Base64;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.Manifest;
 
 
 import android.content.Intent;
 import android.provider.MediaStore;
+import android.os.Environment;
+import android.os.Build;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.support.v4.content.FileProvider;
+import java.text.SimpleDateFormat;
 
 import com.android.volley.toolbox.StringRequest;
 
 import org.json.JSONObject;
+import android.util.JsonReader;
+
 import org.json.JSONException;
 import com.android.volley.VolleyError;
 import com.android.volley.RequestQueue;
@@ -41,6 +52,18 @@ import android.util.Log;
 import java.util.Map;
 import java.util.HashMap;
 import android.support.design.widget.FloatingActionButton;
+
+import java.io.*;
+import java.util.*;
+import java.net.*;
+import java.nio.file.Files;
+import java.util.concurrent.ExecutionException;
+
+import android.widget.ProgressBar;
+
+import android.app.Dialog;
+
+
 
 
 public class EventHomePage extends AppCompatActivity {
@@ -58,6 +81,8 @@ public class EventHomePage extends AppCompatActivity {
 
     String mEventName = "";
 
+    private String mCurrPath = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +92,10 @@ public class EventHomePage extends AppCompatActivity {
         setContentView(R.layout.activity_event_home_page);
         // make title
         mTitle = (TextView) findViewById(R.id.welcome_text);
+
+
+
+
 
         Intent intent = getIntent();
         if(intent.getExtras() != null){
@@ -121,6 +150,15 @@ public class EventHomePage extends AppCompatActivity {
 
                     toast4.show();
                     break;
+
+                case 5:
+                    toast_string = "Error occurred while adding member to database";
+                    Toast toast5 = Toast.makeText(getApplicationContext(),
+                            toast_string,
+                            Toast.LENGTH_SHORT);
+
+                    toast5.show();
+                    break;
                 default:
                     // do nothing
                     break;
@@ -152,7 +190,34 @@ public class EventHomePage extends AppCompatActivity {
                     startActivityForResult(takePictureIntent, 1);
                 }
 
-                // TODO: send jpeg to API to ensure that I can do that
+//                Long tsLong = System.currentTimeMillis() / 1000;
+//                String ts = tsLong.toString();
+//
+//                String imageFileName = "IMG_" + ts + "_";
+//                File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+//                if (storageDir == null) {
+//                    storageDir.mkdir();
+//                }
+//                File image;
+//                try {
+//                    image = File.createTempFile(
+//                            imageFileName,  /* prefix */
+//                            ".jpg",         /* suffix */
+//                            storageDir      /* directory */);
+//
+//                    Uri photoUri = FileProvider.getUriForFile(getApplicationContext(), "edu.ucsb.cs.cs184.mschmit.facescanner.provider", image);
+//
+//                    // mCurrPhoto = image.getAbsolutePath();
+//
+//                    Intent imageIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+//                    imageIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoUri);
+//                    imageIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//                    // mStartDialog = true;
+//                    startActivityForResult(imageIntent, 1);
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
 
 
             }
@@ -239,100 +304,240 @@ public class EventHomePage extends AppCompatActivity {
 
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
-            final Bitmap imageBitmap = (Bitmap) extras.get("data");
+             final Bitmap imageBitmap = (Bitmap) extras.get("data");
+            // Uri photo = (Uri) extras.get("uri_input");
 
-            System.out.println("got bitmap");
-            String url = "http://csquids-cs184-final-project.herokuapp.com/api/v1/checkFace";
+            mImageBitmap = imageBitmap;
 
-            //converting image to base64 string
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            imageBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-            byte[] imageBytes = baos.toByteArray();
-            final String imageString = Base64.encodeToString(imageBytes, 0);
+            File file;
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+            requestPermissions(permissions, 1);
+            onRequestPermissionsResult(requestCode,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},grantResults);
 
-            //sending image to server
-            StringRequest request = new StringRequest(Request.Method.POST, url, new Response.Listener<String>(){
-                @Override
-                public void onResponse(String s) {
-
-                    Intent myIntent = new Intent(EventHomePage.this, ConfirmationActivity.class);
-                    myIntent.putExtra("image", imageBitmap); //Optional parameters
-                    EventHomePage.this.startActivity(myIntent);
-
-                }
-            },new Response.ErrorListener(){
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-
-                    System.out.println("got an error response");
-                }
-            }) {
-                //adding parameters to send
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> parameters = new HashMap<String, String>();
-                    parameters.put("image", imageString);
-                    return parameters;
-                }
-            };
-
-            RequestQueue rQueue = Volley.newRequestQueue(EventHomePage.this);
-            rQueue.add(request);
-//
-//            JSONObject json = new JSONObject();
-//            try {
-//                json.put("user","hello");
-//            } catch (JSONException e) {
-//                e.printStackTrace();
-//            }
-//            RequestQueue queue = Volley.newRequestQueue(this);
-//            String url = "http://csquids-cs184-final-project.herokuapp.com/api/v1/checkFace";
-//            JsonObjectRequest postRequest = new JsonObjectRequest(url, json,
-//                    new Response.Listener<JSONObject>()
-//                    {
-//                        @Override
-//                        public void onResponse(JSONObject response) {
-//                            // response
-//                            Log.wtf("Respdafsonse", response.toString());
-//                            try {
-//                                if (response.getBoolean("logged_in")) {
-////                                    String token=response.getString("token");
-////                                    Intent intent;
-////                                    intent = new Intent(user.getContext(), CreateEventActivity.class);
-////                                    intent.putExtra("token", token);
-////                                    startActivity(intent);
-//                                }
-//                            }catch(JSONException e){
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    },
-//                    new Response.ErrorListener()
-//                    {
-//                        @Override
-//                        public void onErrorResponse(VolleyError error) {
-//                            // error
-//                            error.printStackTrace();
-//                        }
-//                    }
-//            );
-//
-//            queue.add(postRequest);
-
-            // TODO: send bitmap to API
-
-            // TODO: make "loading" activity so the user knows something is going on while the server side is running
-
-            // TODO: if the user is not recognized, automatically jump to the "create user" page
 
 
 
 
         }
+    }
+
+    private int grantResults[];
+    private Bitmap mImageBitmap;
+
+    @Override // android recommended class to handle permissions
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                "/face_photos";
+
+
+        ImageLoaderTask ilt = new ImageLoaderTask();
+        JSONObject infoFromDatabase;
+        try {
+            infoFromDatabase = ilt.execute(file_path).get();
+        }catch(ExecutionException ee){
+            ee.printStackTrace();
+            return;
+        }catch(InterruptedException ie){
+            ie.printStackTrace();
+            return;
+        }
+
+
+        // check if the person was already in the database
+        try {
+            boolean notInDatabase = infoFromDatabase.getBoolean("userError");
+            if(!notInDatabase){
+                // go to confirmation activity
+
+                Intent intent;
+                intent = new Intent(EventHomePage.this, ConfirmationActivity.class);
+                intent.putExtra("image_path", mCurrPath);
+                startActivity(intent);
+            }else{
+                // go to make new user activity
+
+                Intent intent;
+                intent = new Intent(EventHomePage.this, MakeNewActivity.class);
+                intent.putExtra("image_path", mCurrPath);
+                startActivity(intent);
+            }
+        }catch(JSONException je){
+            je.printStackTrace();
+            return;
+        }
+
+
+
+
+
+    }
+
+
+    private class ImageLoaderTask extends AsyncTask<String, Void, JSONObject>
+
+    {
+
+        Dialog mLoadingDialog;
+
+
+        @Override
+        protected void onPreExecute()
+        {
+
+            mLoadingDialog = new Dialog(EventHomePage.this);
+            mLoadingDialog.setContentView(R.layout.loading_dialog);
+            mLoadingDialog.create();
+            mLoadingDialog.show();
+        }
+
+        @Override
+        protected JSONObject doInBackground(String... imagePaths){
+
+
+            File file;
+            File dir = new File(imagePaths[0]);
+            if(!dir.exists()) {
+                dir.mkdir();
+            }
+            try {
+                dir.createNewFile();
+
+
+                System.out.println("directory exists: " + dir.exists());
+                String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                file = new File(dir, timeStamp + ".jpeg");
+                mCurrPath = file.getAbsolutePath();
+                file.createNewFile();
+            }catch(IOException e){
+                e.printStackTrace();
+                return null;
+            }
+//            try {
+//                FileOutputStream fOut = new FileOutputStream(file);
+//            }catch(FileNotFoundException e){
+//                e.printStackTrace();;
+//            }
+
+            try {
+                FileOutputStream fOut = new FileOutputStream(file);
+                mImageBitmap.compress(Bitmap.CompressFormat.JPEG, 85, fOut);
+                fOut.flush();
+                fOut.close();
+
+            }catch(FileNotFoundException e){
+                e.printStackTrace();
+            }catch(IOException ie){
+                ie.printStackTrace();
+            }
+
+
+            String url = "http://csquids-cs184-final-project.herokuapp.com/api/v1/checkFace";
+            String charset = "UTF-8";
+            String param = "1";
+            // File binaryFile = new File("/path/to/file.bin");
+            String boundary = Long.toHexString(System.currentTimeMillis()); // Just generate some unique random value.
+            String CRLF = "\r\n"; // Line separator required by multipart/form-data.
+            HttpURLConnection connection=null;
+            try{
+                connection = (HttpURLConnection)(new URL(url).openConnection());
+                connection.setDoOutput(true);
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + boundary);
+
+            }catch(Exception e){
+                System.out.println("dsfdsgh");
+            }
+
+            try (
+                    OutputStream output = connection.getOutputStream();
+                    PrintWriter writer = new PrintWriter(new OutputStreamWriter(output, charset), true);
+            ) {
+                // Send normal param.
+                writer.append("--" + boundary).append(CRLF);
+                writer.append("Content-Disposition: form-data; name=\"orgId\"").append(CRLF);
+                writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+                writer.append(CRLF).append(param).append(CRLF).flush();
+
+                // writer.append("--" + boundary).append(CRLF);
+                // writer.append("Content-Disposition: form-data; name=\"eventId\"").append(CRLF);
+                // writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+                // writer.append(CRLF).append("2").append(CRLF).flush();
+
+                // Send text file.
+                writer.append("--" + boundary).append(CRLF);
+                writer.append("Content-Disposition: form-data; name=\"face\"; filename=\"" + file.getName() + "\"").append(CRLF);
+                writer.append("Content-Type: image/jpg;").append(CRLF); // Text file itself must be saved in this charset!
+                writer.append(CRLF).flush();
+                Files.copy(file.toPath(), output);
+                output.flush(); // Important before continuing with writer!
+                writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+
+                // Send binary file.
+                // writer.append("--" + boundary).append(CRLF);
+                // writer.append("Content-Disposition: form-data; name=\"binaryFile\"; filename=\"" + binaryFile.getName() + "\"").append(CRLF);
+                // writer.append("Content-Type: " + URLConnection.guessContentTypeFromName(binaryFile.getName())).append(CRLF);
+                // writer.append("Content-Transfer-Encoding: binary").append(CRLF);
+                // writer.append(CRLF).flush();
+                // Files.copy(binaryFile.toPath(), output);
+
+                output.flush(); // Important before continuing with writer!
+                writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
+
+                // End of multipart/form-data.
+                writer.append("--" + boundary + "--").append(CRLF).flush();
+            }catch(Exception e){
+                System.out.println("filaed");
+                e.printStackTrace();
+            }
+            try{
+                System.out.println(connection.toString());
+                int responseCode = ((HttpURLConnection) connection).getResponseCode();
+                System.out.println(responseCode); // Should be 200
+            }catch(Exception e){
+                System.out.println("lul");
+                e.printStackTrace();
+            }
+
+            // InputStream response = connection.getInputStream();
+            BufferedReader rd;
+            try{
+                rd = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                String line;
+                StringBuilder builder = new StringBuilder();
+                while ((line = rd.readLine()) != null) {
+                    System.out.println(line);
+                    builder.append(line);
+
+                }
+//                InputStream inputStream = connection.getInputStream(); //Read from a file, or a HttpRequest, or whatever.
+//                JSONParser jsonParser = new JSONParser();
+//                JSONObject jsonObject = (JSONObject)jsonParser.parse(
+//                        new InputStreamReader(inputStream, "UTF-8"));
+                JSONObject jsonObject = new JSONObject(builder.toString());
+                return jsonObject;
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(JSONObject d) {
+            // super.onPostExecute(d);
+            //Toast.makeText(getApplicationContext(), R.string.stoppedRecording, Toast.LENGTH_LONG).show();
+            mLoadingDialog.hide();
+            mLoadingDialog.dismiss();
+            // change the viewer
+        }
+
     }
 
 }

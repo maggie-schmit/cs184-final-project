@@ -20,6 +20,17 @@ import java.util.Arrays;
 import android.widget.ArrayAdapter;
 
 
+import org.json.JSONObject;
+import org.json.JSONException;
+import com.android.volley.VolleyError;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
+import com.android.volley.Response;
+import com.android.volley.Request;
+import com.android.volley.AuthFailureError;
+import android.util.Log;
+
 public class MemberLookupActivity extends AppCompatActivity {
 
     EditText mSearchBar;
@@ -84,6 +95,47 @@ public class MemberLookupActivity extends AppCompatActivity {
                         // close event
 
                         // TODO: add person to event
+                        //
+                        JSONObject json = new JSONObject();
+                        try {
+                            json.put("user","hello");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        RequestQueue queue = Volley.newRequestQueue(getApplicationContext());
+                        String url = "http://csquids-cs184-final-project.herokuapp.com/api/v1/checkFace";
+                        JsonObjectRequest postRequest = new JsonObjectRequest(url, json,
+                                new Response.Listener<JSONObject>()
+                                {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        // response
+                                        Log.wtf("Respdafsonse", response.toString());
+                                        try {
+                                            if (response.getBoolean("logged_in")) {
+            //                                    String token=response.getString("token");
+            //                                    Intent intent;
+            //                                    intent = new Intent(user.getContext(), CreateEventActivity.class);
+            //                                    intent.putExtra("token", token);
+            //                                    startActivity(intent);
+                                            }
+                                        }catch(JSONException e){
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                },
+                                new Response.ErrorListener()
+                                {
+                                    @Override
+                                    public void onErrorResponse(VolleyError error) {
+                                        // error
+                                        error.printStackTrace();
+                                    }
+                                }
+            );
+
+            queue.add(postRequest);
+
 
                         // go to eventhomepage
                         Intent myIntent = new Intent(MemberLookupActivity.this, EventHomePage.class);

@@ -6,26 +6,70 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/name_title"
+        android:id="@+id/make_new_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:text="@string/make_new_member_text"
+
+
+        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+
+        android:textAlignment="center"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+
+
+        />
+
+
+    <TextView
+        android:id="@+id/firstname_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
         android:textStyle="bold"
 
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/make_new_text"
         app:layout_constraintLeft_toLeftOf="parent"
 
-        android:text="@string/name_string"
+        android:text="@string/first_name_string"
         />
 
     <EditText
-        android:id="@+id/name_edit_text"
+        android:id="@+id/firstname_edit_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        app:layout_constraintLeft_toRightOf="@id/name_title"
+        app:layout_constraintLeft_toRightOf="@id/firstname_title"
+        app:layout_constraintTop_toBottomOf="@id/make_new_text"
 
-        android:hint="@string/name_edit_hint"/>
+        android:hint="@string/first_name_edit_hint"/>
+
+    <TextView
+        android:id="@+id/lastname_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textStyle="bold"
+
+        app:layout_constraintTop_toBottomOf="@id/firstname_edit_text"
+        app:layout_constraintLeft_toLeftOf="parent"
+
+        android:text="@string/last_name_string"
+        />
+
+    <EditText
+        android:id="@+id/lastname_edit_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintLeft_toRightOf="@id/lastname_title"
+        app:layout_constraintTop_toBottomOf="@id/firstname_edit_text"
+
+        android:hint="@string/last_name_edit_hint"/>
 
     <TextView
         android:id="@+id/email_title"
@@ -34,7 +78,7 @@
 
         android:textStyle="bold"
 
-        app:layout_constraintTop_toBottomOf="@id/name_edit_text"
+        app:layout_constraintTop_toBottomOf="@id/lastname_edit_text"
         app:layout_constraintLeft_toLeftOf="parent"
 
         android:text="@string/email_string"
@@ -45,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
 
-        app:layout_constraintTop_toBottomOf="@id/name_edit_text"
+        app:layout_constraintTop_toBottomOf="@id/lastname_edit_text"
         app:layout_constraintLeft_toRightOf="@id/email_title"
 
         android:hint="@string/email_edit_hint"/>
