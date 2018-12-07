@@ -89,7 +89,6 @@ public class MemberLookupActivity extends AppCompatActivity {
                     public void onClick(DialogInterface dialog, int which) {
                         // close event
 
-                        // TODO: add person to event
 
 
                         // go to eventhomepage

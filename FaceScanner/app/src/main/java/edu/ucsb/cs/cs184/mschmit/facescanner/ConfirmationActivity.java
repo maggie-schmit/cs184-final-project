@@ -36,6 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
+import android.graphics.BitmapFactory;
+
 public class ConfirmationActivity extends AppCompatActivity {
 
     TextView mConfirmationText;
@@ -66,6 +68,10 @@ public class ConfirmationActivity extends AppCompatActivity {
         eventID = intent.getStringExtra("eventID");
         memID = intent.getStringExtra("memberID");
         orgID = intent.getStringExtra("orgID");
+        String path = intent.getStringExtra("image_path");
+
+//        Bitmap bitmap = BitmapFactory.decodeFile(path);
+//        mFaceImage.setImageBitmap(bitmap);
 
         // mFaceImage.setImageBitmap(image);
 
@@ -108,7 +114,7 @@ public class ConfirmationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 // go back to event homepage
 
-                Intent myIntent = new Intent(ConfirmationActivity.this, MemberLookupActivity.class);
+                Intent myIntent = new Intent(ConfirmationActivity.this, EventHomePage.class);
                 myIntent.putExtra("orgID", orgID);
                 myIntent.putExtra("key", 6);
                 startActivity(myIntent);

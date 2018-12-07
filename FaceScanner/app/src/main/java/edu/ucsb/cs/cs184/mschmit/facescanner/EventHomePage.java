@@ -63,14 +63,10 @@ import android.widget.ProgressBar;
 
 import android.app.Dialog;
 
-
-
-
 public class EventHomePage extends AppCompatActivity {
 
-    // TODO: edit how the text looks in each activity
-
-    // TODO: ensure that each activity knows which event they are dealing with
+    // TODO: test scan face with existing member
+    // TODO: test add member functionality
 
     TextView mTitle;
     Button mCameraButton;
@@ -93,6 +89,7 @@ public class EventHomePage extends AppCompatActivity {
         setContentView(R.layout.activity_event_home_page);
         // make title
         mTitle = (TextView) findViewById(R.id.welcome_text);
+
 
         Intent intent = getIntent();
         if(intent.getExtras() != null){
@@ -128,24 +125,6 @@ public class EventHomePage extends AppCompatActivity {
                             Toast.LENGTH_SHORT);
 
                     toast2.show();
-                    break;
-                case 3:
-                    // changed the event details
-                    toast_string = "Event details were updated";
-                    Toast toast3 = Toast.makeText(getApplicationContext(),
-                            toast_string,
-                            Toast.LENGTH_SHORT);
-
-                    toast3.show();
-                    break;
-                case 4:
-                    // the event details were not changed
-                    toast_string = "Event details were not changed";
-                    Toast toast4 = Toast.makeText(getApplicationContext(),
-                            toast_string,
-                            Toast.LENGTH_SHORT);
-
-                    toast4.show();
                     break;
 
                 case 5:
@@ -203,9 +182,11 @@ public class EventHomePage extends AppCompatActivity {
             public void onClick(View view) {
 
                 // go to metrics page
-            Intent myIntent = new Intent(EventHomePage.this, MetricsActivity.class);
-            // myIntent.putExtra("key", value); //Optional parameters
-            EventHomePage.this.startActivity(myIntent);
+                Intent myIntent = new Intent(EventHomePage.this, MetricsActivity.class);
+                // myIntent.putExtra("key", value); //Optional parameters
+                myIntent.putExtra("eventID", mEventName);
+                myIntent.putExtra("orgID", mOrgID);
+                EventHomePage.this.startActivity(myIntent);
 
 
             }
@@ -220,6 +201,8 @@ public class EventHomePage extends AppCompatActivity {
                 alertDialog.setTitle("Alert Dialog");
                 alertDialog.setMessage("Are you sure? Once you close the event you cannot reopen it");
                 alertDialog.setIcon(R.drawable.ic_subdirectory_arrow_left_black_24dp);
+
+                // TODO: update event to be over in the database
 
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -340,7 +323,6 @@ public class EventHomePage extends AppCompatActivity {
                 intent.putExtra("memberID", memberID);
                 intent.putExtra("eventID", mEventName);
                 intent.putExtra("orgID", mOrgID);
-                // intent.putExtra("orgId", );
                 startActivity(intent);
             }else{
                 // go to make new user activity
@@ -495,7 +477,6 @@ public class EventHomePage extends AppCompatActivity {
         protected void onPostExecute(JSONObject d) {
             mLoadingDialog.hide();
             mLoadingDialog.dismiss();
-            // change the viewer
         }
 
     }
