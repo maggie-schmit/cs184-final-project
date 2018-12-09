@@ -65,18 +65,17 @@ import android.app.Dialog;
 
 public class EventHomePage extends AppCompatActivity {
 
-    // TODO: test scan face with existing member
-    // TODO: test add member functionality
+
 
     TextView mTitle;
     Button mCameraButton;
     Button mMetricsButton;
-    Button mCloseButton;
 
     FloatingActionButton mBackButton;
 
     String mEventName = "";
     String mOrgID = "";
+    String mEventId = "";
 
     private String mCurrPath = "";
 
@@ -99,13 +98,18 @@ public class EventHomePage extends AppCompatActivity {
 
             mEventName = intent.getStringExtra("event_name");
 
+           mEventId = intent.getStringExtra("eventId");
+
 
             switch(code){
                 case 0:
                     String event_name = intent.getStringExtra("event_name");
+                    String eventId = intent.getStringExtra("eventId");
                     String title = "Welcome to " + event_name+ " home page";
                     mEventName = event_name;
+                    mEventId = eventId;
                     mTitle.setText(title);
+                    mOrgID = Integer.toString(intent.getIntExtra("orgID", -1));
                     break;
                 case 1:
                     // person already existed and was added to the event
@@ -117,6 +121,8 @@ public class EventHomePage extends AppCompatActivity {
                             Toast.LENGTH_SHORT);
 
                     toast.show();
+                    mOrgID = intent.getStringExtra("orgID");
+
                     break;
                 case 2:
                     // person did not exist and was added to the database
@@ -126,15 +132,17 @@ public class EventHomePage extends AppCompatActivity {
                             toast_string,
                             Toast.LENGTH_SHORT);
 
+                    mOrgID = intent.getStringExtra("orgID");
                     toast2.show();
                     break;
 
                 case 5:
-                    toast_string = "Error occurred while adding member to database";
+                    toast_string = intent.getStringExtra("message");
                     Toast toast5 = Toast.makeText(getApplicationContext(),
                             toast_string,
                             Toast.LENGTH_SHORT);
 
+                    mOrgID = intent.getStringExtra("orgID");
                     toast5.show();
                     break;
                 case 6:
@@ -143,10 +151,13 @@ public class EventHomePage extends AppCompatActivity {
                             toast_string,
                             Toast.LENGTH_SHORT);
 
+                    mOrgID = intent.getStringExtra("orgID");
                     toast6.show();
                     break;
                 default:
                     // do nothing
+                    mOrgID = intent.getStringExtra("orgID");
+
                     break;
             }
 
@@ -158,7 +169,6 @@ public class EventHomePage extends AppCompatActivity {
         // make buttons
         mCameraButton = (Button) findViewById(R.id.camera_button);
         mMetricsButton = (Button) findViewById(R.id.metrics_button);
-        mCloseButton = (Button) findViewById(R.id.close_button);
 
         mBackButton = (FloatingActionButton) findViewById(R.id.fab_sign_out);
 
@@ -186,47 +196,13 @@ public class EventHomePage extends AppCompatActivity {
                 // go to metrics page
                 Intent myIntent = new Intent(EventHomePage.this, MetricsActivity.class);
                 // myIntent.putExtra("key", value); //Optional parameters
-                myIntent.putExtra("eventID", mEventName);
+                myIntent.putExtra("eventID", mEventId);
                 myIntent.putExtra("orgID", mOrgID);
                 EventHomePage.this.startActivity(myIntent);
 
 
             }
         });
-
-        mCloseButton.setOnClickListener(new Button.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-
-                // open dialog to see if they are sure
-                final AlertDialog alertDialog = new AlertDialog.Builder(EventHomePage.this).create();
-                alertDialog.setTitle("Alert Dialog");
-                alertDialog.setMessage("Are you sure? Once you close the event you cannot reopen it");
-                alertDialog.setIcon(R.drawable.ic_subdirectory_arrow_left_black_24dp);
-
-                // TODO: update event to be over in the database
-
-                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        // close event
-
-                    }
-                });
-
-                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // keep event open
-                    }
-                });
-
-
-                alertDialog.show();
-
-                // if sure, close the event in the database
-            }
-        });
-
 
         mBackButton.setOnClickListener(new FloatingActionButton.OnClickListener(){
             @Override
@@ -313,18 +289,26 @@ public class EventHomePage extends AppCompatActivity {
 
         // check if the person was already in the database
         try {
-            boolean notInDatabase = infoFromDatabase.getBoolean("userError");
+
+            boolean notInDatabase = false;
+            if(infoFromDatabase.has("userError")) {
+                notInDatabase = infoFromDatabase.getBoolean("userError");
+            }
             if(!notInDatabase){
                 // go to confirmation activity
 
-                String memberID = infoFromDatabase.getString("member_id");
-                String eventID = infoFromDatabase.getString("event_id");
+                String memberID = infoFromDatabase.getString("id");
+                // String eventID = infoFromDatabase.getString("event_id");
+                String first_name = infoFromDatabase.getString("first_name");
+                String last_name = infoFromDatabase.getString("last_name");
                 Intent intent;
                 intent = new Intent(EventHomePage.this, ConfirmationActivity.class);
                 intent.putExtra("image_path", mCurrPath);
                 intent.putExtra("memberID", memberID);
-                intent.putExtra("eventID", mEventName);
+                intent.putExtra("eventID", mEventId);
                 intent.putExtra("orgID", mOrgID);
+                intent.putExtra("first_name", first_name);
+                intent.putExtra("last_name", last_name);
                 startActivity(intent);
             }else{
                 // go to make new user activity
@@ -332,6 +316,9 @@ public class EventHomePage extends AppCompatActivity {
                 Intent intent;
                 intent = new Intent(EventHomePage.this, MakeNewActivity.class);
                 intent.putExtra("image_path", mCurrPath);
+                intent.putExtra("key", 1);
+                intent.putExtra("orgId", mOrgID);
+                intent.putExtra("eventId", mEventId);
                 startActivity(intent);
             }
         }catch(JSONException je){
@@ -424,7 +411,7 @@ public class EventHomePage extends AppCompatActivity {
                 writer.append("--" + boundary).append(CRLF);
                 writer.append("Content-Disposition: form-data; name=\"orgId\"").append(CRLF);
                 writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
-                writer.append(CRLF).append(param).append(CRLF).flush();
+                writer.append(CRLF).append(mOrgID).append(CRLF).flush();
 
                 // Send text file.
                 writer.append("--" + boundary).append(CRLF);

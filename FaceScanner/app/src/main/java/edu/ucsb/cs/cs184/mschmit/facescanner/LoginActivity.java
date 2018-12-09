@@ -54,8 +54,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 RequestQueue queue = Volley.newRequestQueue(context);
-                if(email.getText().toString().equals(""))return;
-                if(pw.getText().toString().equals(""))return;
+                if(email.getText().toString().equals("") || pw.getText().toString().equals("")){
+                    Toast.makeText(LoginActivity.this,"All fields must be filled",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://csquids-cs184-final-project.herokuapp.com/api/v1/orgLogin",
                         new Response.Listener<String>() {
                             @Override

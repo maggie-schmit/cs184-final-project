@@ -70,7 +70,6 @@ public class MetricsActivity extends AppCompatActivity {
         Intent intent = getIntent();
 
 
-        // TODO: test this function
 
         mNameText = (TextView) findViewById(R.id.event_name_placeholder);
         mAttendeeNumber = (TextView) findViewById(R.id.attendees_number);
@@ -90,6 +89,8 @@ public class MetricsActivity extends AppCompatActivity {
         // get attendees
         ImageLoaderTask ilt = new ImageLoaderTask();
         try {
+
+
             JSONArray resultsArray = ilt.execute().get();
 
             mAttendeeArrayList = new ArrayList<String>();
@@ -132,6 +133,8 @@ public class MetricsActivity extends AppCompatActivity {
 
                 Intent myIntent = new Intent(MetricsActivity.this, EventHomePage.class);
                 myIntent.putExtra("key", 4);
+                myIntent.putExtra("eventId", mEventID);
+                myIntent.putExtra("orgID", mOrgID);
                 MetricsActivity.this.startActivity(myIntent);
             }
         });
@@ -140,14 +143,6 @@ public class MetricsActivity extends AppCompatActivity {
     private class ImageLoaderTask extends AsyncTask<String, Void, JSONArray>
 
     {
-
-
-
-        @Override
-        protected void onPreExecute()
-        {
-
-        }
 
         @Override
         protected JSONArray doInBackground(String... imagePaths){
@@ -176,15 +171,15 @@ public class MetricsActivity extends AppCompatActivity {
                 // Send ORGID
                 writer.append("--" + boundary).append(CRLF);
                 writer.append("Content-Disposition: form-data; name=\"orgId\"").append(CRLF);
-                writer.append("Content-Type: text/plain; charset=" + mOrgID).append(CRLF);
-                writer.append(CRLF).append(param).append(CRLF).flush();
+                writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+                writer.append(CRLF).append(mOrgID).append(CRLF).flush();
 
 
                 // Send Event ID
                 writer.append("--" + boundary).append(CRLF);
                 writer.append("Content-Disposition: form-data; name=\"eventId\"").append(CRLF);
-                writer.append("Content-Type: text/plain; charset=" + mEventID).append(CRLF);
-                writer.append(CRLF).append(param).append(CRLF).flush();
+                writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+                writer.append(CRLF).append(mEventID).append(CRLF).flush();
 
                 output.flush(); // Important before continuing with writer!
                 writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.

@@ -52,6 +52,8 @@ public class ConfirmationActivity extends AppCompatActivity {
     String memID = "";
     String orgID = "";
 
+    String mImagePath = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +70,11 @@ public class ConfirmationActivity extends AppCompatActivity {
         eventID = intent.getStringExtra("eventID");
         memID = intent.getStringExtra("memberID");
         orgID = intent.getStringExtra("orgID");
-        String path = intent.getStringExtra("image_path");
+        mImagePath = intent.getStringExtra("image_path");
+
+        person_name = intent.getStringExtra("first_name");
+        person_name += " ";
+        person_name += intent.getStringExtra("last_name");
 
 //        Bitmap bitmap = BitmapFactory.decodeFile(path);
 //        mFaceImage.setImageBitmap(bitmap);
@@ -77,6 +83,8 @@ public class ConfirmationActivity extends AppCompatActivity {
 
         mYesButton = (Button) findViewById(R.id.yes_button_2);
         mNoButton = (Button) findViewById(R.id.no_button_2);
+
+        mNameText.setText(person_name);
 
         // if the database could not find a match, automatically go to add a person
 
@@ -103,6 +111,7 @@ public class ConfirmationActivity extends AppCompatActivity {
                 myIntent.putExtra("key", 1);
                 myIntent.putExtra("person_name", person_name);
                 myIntent.putExtra("orgID", orgID);
+                myIntent.putExtra("eventId", eventID);
                 ConfirmationActivity.this.startActivity(myIntent);
 
 
@@ -112,12 +121,39 @@ public class ConfirmationActivity extends AppCompatActivity {
         mNoButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                // go back to event homepage
 
-                Intent myIntent = new Intent(ConfirmationActivity.this, EventHomePage.class);
-                myIntent.putExtra("orgID", orgID);
-                myIntent.putExtra("key", 6);
-                startActivity(myIntent);
+                // go back to the home page
+                final AlertDialog alertDialog = new AlertDialog.Builder(ConfirmationActivity.this).create();
+                alertDialog.setTitle("Alert Dialog");
+                alertDialog.setMessage("Are you already a member?");
+                alertDialog.setIcon(R.drawable.ic_subdirectory_arrow_left_black_24dp);
+
+                alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent myIntent = new Intent(ConfirmationActivity.this, EventHomePage.class);
+                        myIntent.putExtra("orgID", orgID);
+                        myIntent.putExtra("eventId", eventID);
+                        myIntent.putExtra("key", 6);
+                        startActivity(myIntent);
+                    }
+                });
+                alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                        Intent myIntent = new Intent(ConfirmationActivity.this, MakeNewActivity.class);
+                        myIntent.putExtra("key", 2);
+                        myIntent.putExtra("image_path", mImagePath);
+                        myIntent.putExtra("orgID",orgID);
+                        myIntent.putExtra("eventId", eventID);
+                        startActivity(myIntent);
+                    }
+                });
+
+                alertDialog.show();
+
+
             }
         });
 
@@ -168,13 +204,13 @@ public class ConfirmationActivity extends AppCompatActivity {
                 // Send normal param.
                 writer.append("--" + boundary).append(CRLF);
                 writer.append("Content-Disposition: form-data; name=\"eventId\"").append(CRLF);
-                writer.append("Content-Type: text/plain; charset=" + eventID).append(CRLF);
-                writer.append(CRLF).append(param).append(CRLF).flush();
+                writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+                writer.append(CRLF).append(eventID).append(CRLF).flush();
 
                 writer.append("--" + boundary).append(CRLF);
                 writer.append("Content-Disposition: form-data; name=\"memberId\"").append(CRLF);
-                writer.append("Content-Type: text/plain; charset=" + memID).append(CRLF);
-                writer.append(CRLF).append(param).append(CRLF).flush();
+                writer.append("Content-Type: text/plain; charset=" + charset).append(CRLF);
+                writer.append(CRLF).append(memID).append(CRLF).flush();
 
                 output.flush(); // Important before continuing with writer!
                 writer.append(CRLF).flush(); // CRLF is important! It indicates end of boundary.
