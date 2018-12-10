@@ -109,7 +109,7 @@ public class EventHomePage extends AppCompatActivity {
                     mEventName = event_name;
                     mEventId = eventId;
                     mTitle.setText(title);
-                    mOrgID = Integer.toString(intent.getIntExtra("orgID", -1));
+                    mOrgID = Integer.toString(intent.getIntExtra("orgId", -1));
                     break;
                 case 1:
                     // person already existed and was added to the event
@@ -121,7 +121,7 @@ public class EventHomePage extends AppCompatActivity {
                             Toast.LENGTH_SHORT);
 
                     toast.show();
-                    mOrgID = intent.getStringExtra("orgID");
+                    mOrgID = intent.getStringExtra("orgId");
 
                     break;
                 case 2:
@@ -132,7 +132,7 @@ public class EventHomePage extends AppCompatActivity {
                             toast_string,
                             Toast.LENGTH_SHORT);
 
-                    mOrgID = intent.getStringExtra("orgID");
+                    mOrgID = intent.getStringExtra("orgId");
                     toast2.show();
                     break;
 
@@ -142,7 +142,7 @@ public class EventHomePage extends AppCompatActivity {
                             toast_string,
                             Toast.LENGTH_SHORT);
 
-                    mOrgID = intent.getStringExtra("orgID");
+                    mOrgID = intent.getStringExtra("orgId");
                     toast5.show();
                     break;
                 case 6:
@@ -151,12 +151,12 @@ public class EventHomePage extends AppCompatActivity {
                             toast_string,
                             Toast.LENGTH_SHORT);
 
-                    mOrgID = intent.getStringExtra("orgID");
+                    mOrgID = intent.getStringExtra("orgId");
                     toast6.show();
                     break;
                 default:
                     // do nothing
-                    mOrgID = intent.getStringExtra("orgID");
+                    mOrgID = intent.getStringExtra("orgId");
 
                     break;
             }
@@ -197,7 +197,7 @@ public class EventHomePage extends AppCompatActivity {
                 Intent myIntent = new Intent(EventHomePage.this, MetricsActivity.class);
                 // myIntent.putExtra("key", value); //Optional parameters
                 myIntent.putExtra("eventID", mEventId);
-                myIntent.putExtra("orgID", mOrgID);
+                myIntent.putExtra("orgId", mOrgID);
                 EventHomePage.this.startActivity(myIntent);
 
 
@@ -306,7 +306,7 @@ public class EventHomePage extends AppCompatActivity {
                 intent.putExtra("image_path", mCurrPath);
                 intent.putExtra("memberID", memberID);
                 intent.putExtra("eventID", mEventId);
-                intent.putExtra("orgID", mOrgID);
+                intent.putExtra("orgId", mOrgID);
                 intent.putExtra("first_name", first_name);
                 intent.putExtra("last_name", last_name);
                 startActivity(intent);

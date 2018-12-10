@@ -82,7 +82,7 @@ public class MetricsActivity extends AppCompatActivity {
             mEventID = intent.getStringExtra("eventID");
             mNameText.setText(mEventID);
 
-            mOrgID = intent.getStringExtra("orgID");
+            mOrgID = intent.getStringExtra("orgId");
         }
 
 
@@ -134,7 +134,7 @@ public class MetricsActivity extends AppCompatActivity {
                 Intent myIntent = new Intent(MetricsActivity.this, EventHomePage.class);
                 myIntent.putExtra("key", 4);
                 myIntent.putExtra("eventId", mEventID);
-                myIntent.putExtra("orgID", mOrgID);
+                myIntent.putExtra("orgId", mOrgID);
                 MetricsActivity.this.startActivity(myIntent);
             }
         });

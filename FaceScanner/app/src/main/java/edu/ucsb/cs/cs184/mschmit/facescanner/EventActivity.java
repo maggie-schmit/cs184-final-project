@@ -117,7 +117,7 @@ public class EventActivity extends AppCompatActivity {
                             intent.putExtra("key", 0);
                             intent.putExtra("event_name", obj.getString("name"));
                             intent.putExtra("eventId", Integer.toString(obj.getInt("id")));
-                            intent.putExtra("orgID", orgId);
+                            intent.putExtra("orgId", orgId);
                             startActivity(intent);
 //                            Toast.makeText(context, "This is intended to start EventHomepage activity. This does nothing until you uncomment the 4 lines above where this is in code.",
 //                                    Toast.LENGTH_SHORT).show();
