@@ -22,12 +22,15 @@ import android.util.Base64;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.Manifest;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 
 
 import android.content.Intent;
 import android.provider.MediaStore;
 import android.os.Environment;
 import android.os.Build;
+import android.content.pm.PackageManager;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -180,6 +183,13 @@ public class EventHomePage extends AppCompatActivity {
 
                 // go to  camera widget
 
+                // check for write permissions
+//                int permissionCheck = 0;
+//                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+//                    permissionCheck  = ContextCompat.checkSelfPermission(EventHomePage.this,
+//                            Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//                }
+
                 // take picture
                 Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                 if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
@@ -252,9 +262,12 @@ public class EventHomePage extends AppCompatActivity {
             mImageBitmap = imageBitmap;
 
             File file;
-            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+
+
+            String[] permissions = {Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
             requestPermissions(permissions, 1);
-            onRequestPermissionsResult(requestCode,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},grantResults);
+            // onRequestPermissionsResult(requestCode,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},grantResults);
 
 
 
@@ -269,6 +282,8 @@ public class EventHomePage extends AppCompatActivity {
     @Override // android recommended class to handle permissions
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+
+        // check for permissions
 
         String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
                 "/face_photos";
