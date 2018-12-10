@@ -30,6 +30,10 @@ import android.view.ViewGroup;
 
 import android.support.v4.content.ContextCompat;
 
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -40,7 +44,16 @@ public class EventActivity extends AppCompatActivity {
     Context context;
     EventActivity ea;
     JSONArray jsonResponse = null;
-    static final String [] jsonKeys=new String[]{"id","org_id","name","start_date","end_date"};
+    static final String [] jsonKeys=new String[]{"name","start_date"};
+    static final Map<String, String>JSONKEYNAMES;
+    static{
+        HashMap<String,String> a =
+                new HashMap<>();
+        a.put("name","Name");
+        a.put("start_date","Start Date");
+        JSONKEYNAMES = Collections.unmodifiableMap(a);
+    }
+    int eventDisplayOffset=0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,14 +77,17 @@ public class EventActivity extends AppCompatActivity {
     }
     private void injectEventsToGUI(){
         LinearLayout container=findViewById(R.id.event_container);
+        container.removeAllViews();
         LinearLayout menu=new LinearLayout(context);
-        float mnWidth=TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60, getResources().getDisplayMetrics());
+        float mnWidth=TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 120, getResources().getDisplayMetrics());
+        float mnHeight=TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 40, getResources().getDisplayMetrics());
         for(String s:jsonKeys){
             TextView txt=new TextView(context);
-            txt.setText(s);
+            txt.setText(JSONKEYNAMES.get(s));
             txt.setId(View.generateViewId());
             txt.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
             txt.setWidth((int)mnWidth);
+            txt.setHeight((int)mnHeight);
             menu.addView(txt);
         }
         container.addView(menu);
@@ -92,10 +108,36 @@ public class EventActivity extends AppCompatActivity {
                 txt.setId(View.generateViewId());
                 txt.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
                 txt.setWidth((int)mnWidth);
+                txt.setHeight((int)mnHeight);
                 try {
                     String str = obj.getString(s);
+                    if(s=="start_date"){
+                        str=str.replace("Z","");
+//                        Log.wtf("afioejior", str);
+//                        Log.wtf("adjsiooiojoir", LocalDateTime.parse(str).toString());
+//                        Log.wtf("afjieoiji", "ds"+LocalDateTime.parse(str).getDayOfYear());
+                        LocalDateTime ldt=LocalDateTime.parse(str);
+                        // For whatever reason offsetdatetime not working
+//                        OffsetDateTime odt=ldt.atOffset(ZoneOffset.ofHours(5));
+                        boolean pm=false;
+                        int hour=(ldt.getHour()+16)%24;
+                        int minute=ldt.getMinute();
+                        LocalDateTime ldt2=null;
+                        if(ldt.getHour()<8)ldt=ldt.minusDays(1);
+
+                        int day=ldt.getDayOfMonth();
+                        int month=ldt.getMonthValue();
+                        if(hour>=12)pm=true;
+                        if(hour>=13)hour-=12;
+                        if(hour==0)hour+=12;
+                        String mOff="";
+                        if(minute<10)mOff+="0";
+                        if(minute==0)mOff+="0";
+                        str=String.valueOf(hour+":"+mOff+minute+" "+(pm?"PM":"AM")+" "+month+"/"+(day<10?"0":"")+day);
+                    }
                     txt.setText(str);
                 }catch(Exception e){
+                    Log.wtf("error", e.toString());
                     e.printStackTrace();
                 }
                 ll.addView(txt);

@@ -28,7 +28,7 @@ import static edu.ucsb.cs.cs184.mschmit.facescanner.EventActivity.orgId;
 
 public class CreateEventActivity extends AppCompatActivity {
     EditText name;
-    EditText memberCount;
+//    EditText memberCount;
     Button button;
     Context context;
     int id;
@@ -37,7 +37,7 @@ public class CreateEventActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_event);
         name=findViewById(R.id.create_event_name);
-        memberCount=findViewById(R.id.create_event_member_count);
+//        memberCount=findViewById(R.id.create_event_member_count);
         button=findViewById(R.id.create_event_button);
         context=this;
         Intent intent=getIntent();
@@ -80,7 +80,7 @@ public class CreateEventActivity extends AppCompatActivity {
 //                        Log.wtf(email.getText().toString(),pw.getText().toString());
                         params.put("orgId",String.valueOf(id));
                         params.put("name",name.getText().toString());
-                        params.put("startDate",String.valueOf(System.currentTimeMillis()));
+                        params.put("startDate",String.valueOf(System.currentTimeMillis()/1000));
                         Log.wtf("dfsfd",params.toString());
                         return params;
                     }

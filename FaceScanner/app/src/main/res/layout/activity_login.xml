@@ -18,18 +18,20 @@
         android:layout_marginTop="80dp"/>
     <EditText
         android:id="@+id/login_email"
-        android:layout_width="120dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:maxLines="1"
         android:hint="Email"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/login_title"/>
     <EditText
         android:id="@+id/login_pw"
-        android:layout_width="120dp"
+        android:layout_width="250dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
+        android:maxLines="1"
         android:hint="Password"
         android:inputType="textPassword"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -63,8 +65,8 @@
         android:id="@+id/login_sidenote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="USER/PASS now required. Sample user with events already: User: 'a@gmail.com', Pass: 'c'"
-        android:textSize="12dp"
+        android:text="USER/PASS required. Sample users with events already:\n\nUser: 'e@gmail.com',Pass: 'e' \nUser: 'a@gmail.com', Pass: 'c'"
+        android:textSize="14dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/login_register_button"
