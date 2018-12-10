@@ -74,7 +74,7 @@ public class MakeNewActivity extends AppCompatActivity {
             // get image from file
             mImageFile = new File(file_name);
 
-            mOrgID = intent.getStringExtra("orgID");
+            mOrgID = intent.getStringExtra("orgId");
             mEventId = intent.getStringExtra("eventId");
 
         }
@@ -154,15 +154,11 @@ public class MakeNewActivity extends AppCompatActivity {
     private class ImageLoaderTask extends AsyncTask<String, Void, JSONObject>
     {
 
-        Dialog mLoadingDialog;
 
         @Override
         protected void onPreExecute() {
 
-            mLoadingDialog = new Dialog(MakeNewActivity.this);
-            mLoadingDialog.setContentView(R.layout.loading_dialog);
-            mLoadingDialog.create();
-            mLoadingDialog.show();
+
         }
 
         @Override
@@ -269,8 +265,6 @@ public class MakeNewActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(JSONObject d) {
             // super.onPostExecute(d);
-            mLoadingDialog.hide();
-            mLoadingDialog.dismiss();
         }
     }
 

@@ -131,7 +131,7 @@ public class ConfirmationActivity extends AppCompatActivity {
                 alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         Intent myIntent = new Intent(ConfirmationActivity.this, EventHomePage.class);
-                        myIntent.putExtra("orgID", orgID);
+                        myIntent.putExtra("orgId", orgID);
                         myIntent.putExtra("eventId", eventID);
                         myIntent.putExtra("key", 6);
                         startActivity(myIntent);
@@ -145,7 +145,7 @@ public class ConfirmationActivity extends AppCompatActivity {
                         Intent myIntent = new Intent(ConfirmationActivity.this, MakeNewActivity.class);
                         myIntent.putExtra("key", 2);
                         myIntent.putExtra("image_path", mImagePath);
-                        myIntent.putExtra("orgID",orgID);
+                        myIntent.putExtra("orgId",orgID);
                         myIntent.putExtra("eventId", eventID);
                         startActivity(myIntent);
                     }
