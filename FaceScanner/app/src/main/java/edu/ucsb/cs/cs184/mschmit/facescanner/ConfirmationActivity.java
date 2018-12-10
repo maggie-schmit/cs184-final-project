@@ -69,7 +69,7 @@ public class ConfirmationActivity extends AppCompatActivity {
         // Bitmap image = (Bitmap) intent.getParcelableExtra("image");
         eventID = intent.getStringExtra("eventID");
         memID = intent.getStringExtra("memberID");
-        orgID = intent.getStringExtra("orgID");
+        orgID = intent.getStringExtra("orgId");
         mImagePath = intent.getStringExtra("image_path");
 
         person_name = intent.getStringExtra("first_name");
@@ -110,7 +110,7 @@ public class ConfirmationActivity extends AppCompatActivity {
                 Intent myIntent = new Intent(ConfirmationActivity.this, EventHomePage.class);
                 myIntent.putExtra("key", 1);
                 myIntent.putExtra("person_name", person_name);
-                myIntent.putExtra("orgID", orgID);
+                myIntent.putExtra("orgId", orgID);
                 myIntent.putExtra("eventId", eventID);
                 ConfirmationActivity.this.startActivity(myIntent);
 
