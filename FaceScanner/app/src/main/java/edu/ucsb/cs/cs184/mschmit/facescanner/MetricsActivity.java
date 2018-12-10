@@ -99,7 +99,7 @@ public class MetricsActivity extends AppCompatActivity {
 
             mAttendeeList.setAdapter(arrayAdapter);
 
-            if(mAttendeeArrayList != null) {
+            if(resultsArray != null) {
                 numAttendees = resultsArray.length();
             }else{
                 numAttendees = 0;
