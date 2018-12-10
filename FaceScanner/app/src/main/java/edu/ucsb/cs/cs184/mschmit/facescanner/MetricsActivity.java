@@ -99,10 +99,14 @@ public class MetricsActivity extends AppCompatActivity {
 
             mAttendeeList.setAdapter(arrayAdapter);
 
-            numAttendees = resultsArray.length();
+            if(mAttendeeArrayList != null) {
+                numAttendees = resultsArray.length();
+            }else{
+                numAttendees = 0;
+            }
 
             // add all things to the array
-            for(int i=0; i < resultsArray.length(); i++){
+            for(int i=0; i < numAttendees; i++){
                 JSONObject curr_object = resultsArray.getJSONObject(i);
                 String first_name = curr_object.getString("first_name");
                 String last_name = curr_object.getString("last_name");
