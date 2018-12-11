@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
@@ -33,6 +34,7 @@ public class RegisterActivity extends AppCompatActivity {
     EditText rpw;
     EditText pw;
     Context context;
+    TextView sidenote;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,6 +45,7 @@ public class RegisterActivity extends AppCompatActivity {
         rpw=findViewById(R.id.register_confirm_pw);
         pw=findViewById(R.id.register_pw);
         button=findViewById(R.id.register_button);
+        sidenote=findViewById(R.id.register_sidenote);
         context=this;
         Intent intent = getIntent();
         if(intent.hasExtra("email"))
@@ -53,9 +56,18 @@ public class RegisterActivity extends AppCompatActivity {
             public void onClick(View v) {
                 RequestQueue queue = Volley.newRequestQueue(context);
                 String pwStr=pw.getText().toString();
-                if(!rpw.getText().toString().equals(pwStr))return;
-                if(email.getText().toString().equals(""))return;
-                if(name.getText().toString().equals(""))return;
+                if(!rpw.getText().toString().equals(pwStr)){
+                    sidenote.setText("Your passwords do not match.");
+                    return;
+                }
+                if(email.getText().toString().equals("")){
+                    sidenote.setText("Your email is missing.");
+                    return;
+                }
+                if(name.getText().toString().equals("")){
+                    sidenote.setText("Your name is missing.");
+                    return;
+                }
                 if(pwStr.equals(""))return;
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://csquids-cs184-final-project.herokuapp.com/api/v1/createOrg",
                         new Response.Listener<String>() {

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -31,6 +32,7 @@ public class CreateEventActivity extends AppCompatActivity {
 //    EditText memberCount;
     Button button;
     Context context;
+    TextView sidenote;
     int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,13 +42,17 @@ public class CreateEventActivity extends AppCompatActivity {
 //        memberCount=findViewById(R.id.create_event_member_count);
         button=findViewById(R.id.create_event_button);
         context=this;
+        sidenote=findViewById(R.id.create_event_sidenote);
         Intent intent=getIntent();
 //        Log.wtf("sdjijere",intent.getExtras().toString());
         id=intent.getIntExtra("id",-1);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(name.getText().toString().equals(""))return;
+                if(name.getText().toString().equals("")){
+                    sidenote.setText("Event name is missing.");
+                    return;
+                }
                 RequestQueue queue = Volley.newRequestQueue(context);
                 StringRequest stringRequest = new StringRequest(Request.Method.POST, "http://csquids-cs184-final-project.herokuapp.com/api/v1/createEvent",
                         new Response.Listener<String>() {
