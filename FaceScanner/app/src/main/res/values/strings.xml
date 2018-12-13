@@ -1,0 +1,43 @@
+<resources>
+    <string name="app_name">FaceScanner</string>
+    <string name="event_string">Welcome to your Event Homepage</string>
+    <string name="camera_string">Scan Faces</string>
+    <string name="metrics_string">View Metrics</string>
+    <string name="close_string"> CLOSE EVENT</string>
+
+    <string name="close_dialog_fragment_string"> Are you sure you want to close this event? This action cannot be undone</string>
+    <string name="yes_string">Yes</string>
+    <string name="no_string">No</string>
+
+    <string name="metrics_title">Event Metrics</string>
+    <string name="event_name_string">Name:</string>
+    <string name="event_name_hint">Event Name Will Go Here</string>
+    <string name="location_string">Location:</string>
+    <string name="location_hint">Event Location Will Go Here</string>
+    <string name="attendees_title_string">Number of Attendees: </string>
+    <string name="attendees_placeholder">Number of Attendees Go Here </string>
+    <string name="people_title_string">Attendees: </string>
+
+    <string name="is_this_you_string">Is this you?</string>
+    <string name="placeholder">Name from database will go here </string>
+
+    <string name="no_dialog_string">Are you already a club member?</string>
+    <string name="preexisting_button_text">Sign in existing member</string>
+    <string name="make_new_member_text">Create new member profile</string>
+
+    <string name="first_name_string">First Name:</string>
+    <string name="first_name_edit_hint">Enter First Name Here</string>
+    <string name="last_name_string">Last Name:</string>
+    <string name="last_name_edit_hint">Enter Last Name Here</string>
+    <string name="email_string">Email:</string>
+    <string name="email_edit_hint">Enter Email Here</string>
+    <string name="unique_id_string">Choose a Unique Username:</string>
+    <string name="unique_id_edit_hint">Enter Username Here</string>
+    <string name="save_string">Save</string>
+
+    <string name="lookup_bar_hint">Enter member name...</string>
+    <string name="search_button_text">Search</string>
+
+    <string name="loading_text">Checking our database...</string>
+    <string name="make_new_title">MEMBER NOT FOUND; PLEASE MAKE NEW CLUB MEMBER</string>
+</resources>
